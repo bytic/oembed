@@ -36,10 +36,9 @@ class VideoPlayersTest extends AbstractTest
     {
         $embed = VideoPlayers::embed(
             'https://www.youtube.com/watch?v=789789789789',
-            [],
-            'https://www.youtube.com/watch?v=Yq7Eh6JTKIg'
+            ['fallback' => 'https://www.youtube.com/watch?v=Yq7Eh6JTKIg']
         );
 
-        static::stringContains('Yq7Eh6JTKIg', $embed);
+        static::assertStringContainsString('Yq7Eh6JTKIg', $embed);
     }
 }

@@ -18,10 +18,16 @@ class VideoPlayers
      * @param $backupUrl
      * @return mixed
      */
-    public static function embed($url, $config = [], $backupUrl = null)
+    public static function embed($url, $config = [])
     {
         /** @var Adapter $abstract */
         $abstract = Oembed::get($url);
+
+        $backupUrl = null;
+        if (isset($config['fallback'])) {
+            $backupUrl = $config['fallback'];
+            unset($config['fallback']);
+        }
 
         if ($abstract->type != 'video' && $backupUrl) {
             return static::embed($backupUrl, $config);
