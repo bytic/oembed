@@ -31,4 +31,10 @@ class OembedTest extends AbstractTest
         self::assertInstanceOf(EmbedAdapter::class, $data2);
         self::assertInstanceOf(EmbedAdapter::class, $data3);
     }
+    
+    protected function tearDown()
+    {
+        parent::tearDown();
+        Oembed::setEmbedLibrary(null);
+    }
 }

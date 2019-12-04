@@ -37,9 +37,11 @@ class Processor
      * @param $params
      * @return string
      */
-    public static function run($adapter, $params = [])
+    public static function run($code, $params = [])
     {
-        $code = $adapter->code;
+        if ($code instanceof Adapter) {
+            $code = $code->code;
+        }
 
         $processor = new self($code, $params);
         return $processor->updateCode();
