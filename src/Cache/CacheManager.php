@@ -52,7 +52,7 @@ class CacheManager
     {
         $filename = static::path(static::filename($url, $options));
         if (file_exists($filename)) {
-        unlink($filename);
+            unlink($filename);
         }
     }
 
@@ -76,5 +76,13 @@ class CacheManager
         $filename .= '--' . sha1(serialize($options));
         $filename .= '.serialized';
         return $filename;
+    }
+
+    /**
+     * @param string $path
+     */
+    public static function setPath(string $path)
+    {
+        self::$path = $path;
     }
 }
