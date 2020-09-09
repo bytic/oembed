@@ -53,7 +53,7 @@ class Processor
      */
     protected function updateCode()
     {
-        $dom = new DOMDocument;
+        $dom = new DOMDocument();
         $dom->loadHTML($this->code, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         $dom = $this->changeAttributes($dom);
         return $dom->saveHTML();
