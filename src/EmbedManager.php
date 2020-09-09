@@ -13,20 +13,23 @@ class EmbedManager
     /**
      * @param $url
      * @param array|null $config
-     * @return \Embed\Adapters\Adapter
+     * @return \Embed\OEmbed
      */
-    public static function create($url, array $config = null)
+    public static function create($url, array $config = [])
     {
-        return static::createEmbedLibrary($url, $config = null);
+        return static::createEmbedLibrary($url, $config);
     }
 
     /**
      * @param $url
      * @param array|null $config
-     * @return \Embed\Adapters\Adapter
+     * @return \Embed\OEmbed
      */
-    public static function createEmbedLibrary($url, array $config = null)
+    public static function createEmbedLibrary($url, array $config = [])
     {
-        return EmbedLibrary::create($url, $config);
+        $embed = new EmbedLibrary();
+        $result = $embed->get($url);
+        $result->setSettings($config);
+        return $result->getOEmbed();
     }
 }

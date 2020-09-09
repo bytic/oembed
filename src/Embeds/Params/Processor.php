@@ -2,6 +2,7 @@
 
 namespace ByTIC\Oembed\Embeds\Params;
 
+use ByTIC\Oembed\Oembed;
 use DOMDocument;
 use Embed\Adapters\Adapter;
 
@@ -33,14 +34,14 @@ class Processor
     }
 
     /**
-     * @param Adapter $code
+     * @param string|\Embed\OEmbed $code
      * @param $params
      * @return string
      */
     public static function run($code, $params = [])
     {
-        if ($code instanceof Adapter) {
-            $code = $code->code;
+        if ($code instanceof \Embed\OEmbed) {
+            $code = $code->get('html');
         }
 
         $processor = new self($code, $params);

@@ -11,7 +11,20 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractTest extends TestCase
 {
-    protected function tearDown()
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        array_map(
+            'unlink',
+            array_filter(
+                (array)glob(PROJECT_BASE_PATH . '/cache/*.serialized')
+            )
+        );
+    }
+
+
+    protected function tearDown(): void
     {
         parent::tearDown();
         m::close();

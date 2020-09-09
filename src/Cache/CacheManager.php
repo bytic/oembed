@@ -24,7 +24,7 @@ class CacheManager
     /**
      * @param string $url
      * @param array|null $options
-     * @return false|string
+     * @return false|\Embed\OEmbed
      */
     public static function get($url, array $options = null)
     {

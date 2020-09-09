@@ -20,12 +20,12 @@ class VideoPlayers
      */
     public static function embed($url, $config = [])
     {
-        try {
-            /** @var Adapter $abstract */
+//        try {
+//            /** @var \Embed\OEmbed $abstract */
             $abstract = Oembed::get($url);
-        } catch (\Embed\Exceptions\EmbedException $e) {
-            return '';
-        }
+//        } catch (\Embed\Exceptions\EmbedException $e) {
+//            return '';
+//        }
 
         $backupUrl = null;
         if (isset($config['fallback'])) {
@@ -33,17 +33,14 @@ class VideoPlayers
             unset($config['fallback']);
         }
 
-        if ($abstract->type != 'video' && $backupUrl) {
+        if ($abstract->get('type') != 'video' && $backupUrl) {
             return static::embed($backupUrl, $config);
         }
 
-        $code = $abstract->code;
+        $code = $abstract->get('html');
 
-        if ($abstract->type != 'video' && $backupUrl) {
-            return static::embed($backupUrl, $config);
-        }
         if (count($config) > 0) {
-            $code = Processor::run($abstract, $config);
+            $code = Processor::run($code, $config);
         }
         return $code;
     }

@@ -16,9 +16,9 @@ class Oembed
     /**
      * @param $url
      * @param array|null $options
-     * @return mixed
+     * @return \Embed\OEmbed
      */
-    public static function get($url, array $options = null)
+    public static function get($url, array $options = [])
     {
         if (!CacheManager::has($url, $options)) {
             $data = self::fetch($url, $options);
@@ -31,9 +31,9 @@ class Oembed
     /**
      * @param $url
      * @param array|null $options
-     * @return \Embed\Adapters\Adapter
+     * @return \Embed\OEmbed
      */
-    protected static function fetch($url, array $options = null)
+    protected static function fetch($url, array $options = [])
     {
         return static::embedLibrary()::create($url, $options);
     }
