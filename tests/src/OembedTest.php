@@ -5,7 +5,7 @@ namespace ByTIC\Oembed\Tests;
 use ByTIC\Oembed\Cache\CacheManager;
 use ByTIC\Oembed\EmbedManager;
 use ByTIC\Oembed\Oembed;
-use \Embed\OEmbed as EmbedAdapter;
+use Embed\OEmbed as EmbedAdapter;
 use Mockery as m;
 
 /**
@@ -31,8 +31,8 @@ class OembedTest extends AbstractTest
         self::assertInstanceOf(EmbedAdapter::class, $data2);
         self::assertInstanceOf(EmbedAdapter::class, $data3);
     }
-    
-    protected function tearDown() : void
+
+    protected function tearDown(): void
     {
         parent::tearDown();
         Oembed::setEmbedLibrary(null);

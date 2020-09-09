@@ -22,7 +22,7 @@ class VideoPlayers
     {
 //        try {
 //            /** @var \Embed\OEmbed $abstract */
-            $abstract = Oembed::get($url);
+        $abstract = Oembed::get($url);
 //        } catch (\Embed\Exceptions\EmbedException $e) {
 //            return '';
 //        }

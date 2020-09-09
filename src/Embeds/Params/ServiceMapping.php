@@ -8,5 +8,4 @@ namespace ByTIC\Oembed\Embeds\Params;
  */
 class ServiceMapping
 {
-
 }
