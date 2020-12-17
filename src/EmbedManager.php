@@ -3,6 +3,7 @@
 namespace ByTIC\Oembed;
 
 use Embed\Embed as EmbedLibrary;
+use ByTIC\Oembed\Http\Crawler;
 
 /**
  * Class EmbedManager
@@ -25,9 +26,10 @@ class EmbedManager
      * @param array|null $config
      * @return \Embed\OEmbed
      */
-    public static function createEmbedLibrary($url, array $config = [])
+    public static function createEmbedLibrary($url, array $config = []): \Embed\OEmbed
     {
-        $embed = new EmbedLibrary();
+        $crawler = new Crawler();
+        $embed = new EmbedLibrary($crawler);
         $result = $embed->get($url);
         $result->setSettings($config);
         return $result->getOEmbed();
