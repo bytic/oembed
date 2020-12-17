@@ -19,6 +19,8 @@
   },
   "require": {
     "php": "^7.4|^8.0",
+    "ext-dom": "*",
+    "ext-libxml": "*",
     "embed/embed": "^4.0"
   },
   "require-dev": {

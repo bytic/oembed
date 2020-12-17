@@ -4,7 +4,6 @@ namespace ByTIC\Oembed\Utilities;
 
 use ByTIC\Oembed\Embeds\Params\Processor;
 use ByTIC\Oembed\Oembed;
-use Embed\Adapters\Adapter;
 
 /**
  * Class VideoPlayers
@@ -14,11 +13,10 @@ class VideoPlayers
 {
     /**
      * @param $url
-     * @param $config
-     * @param $backupUrl
+     * @param array $config
      * @return string
      */
-    public static function embed($url, $config = [])
+    public static function embed($url, $config = []): string
     {
 //        try {
 //            /** @var \Embed\OEmbed $abstract */
@@ -39,20 +37,13 @@ class VideoPlayers
 
         $code = $abstract->get('html');
 
+        if (empty($code)) {
+            return '';
+        }
+
         if (count($config) > 0) {
             $code = Processor::run($code, $config);
         }
         return $code;
-    }
-
-    /**
-     * Replace the string with the given value.
-     *
-     * @return string
-     */
-    private function replaceTag($code, $tag, $value)
-    {
-        $pattern = "/" . $tag . "=\"[0-9]*\"/";
-        return preg_replace($pattern, $tag . "='" . $value . "'", $code);
     }
 }

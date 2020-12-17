@@ -2,9 +2,8 @@
 
 namespace ByTIC\Oembed\Embeds\Params;
 
-use ByTIC\Oembed\Oembed;
 use DOMDocument;
-use Embed\Adapters\Adapter;
+use Embed\OEmbed;
 
 /**
  * Class Processor
@@ -18,7 +17,7 @@ class Processor
     protected $code;
 
     /**
-     * @var []
+     * @var array
      */
     protected $params = [];
 
@@ -34,13 +33,13 @@ class Processor
     }
 
     /**
-     * @param string|\Embed\OEmbed $code
+     * @param string|OEmbed $code
      * @param $params
      * @return string
      */
-    public static function run($code, $params = [])
+    public static function run($code, $params = []): string
     {
-        if ($code instanceof \Embed\OEmbed) {
+        if ($code instanceof OEmbed) {
             $code = $code->get('html');
         }
 
@@ -51,7 +50,7 @@ class Processor
     /**
      * @return string
      */
-    protected function updateCode()
+    protected function updateCode(): string
     {
         $dom = new DOMDocument();
         $dom->loadHTML($this->code, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
@@ -61,8 +60,9 @@ class Processor
 
     /**
      * @param DOMDocument $dom
+     * @return DOMDocument
      */
-    protected function changeAttributes($dom)
+    protected function changeAttributes(DOMDocument $dom): DOMDocument
     {
         $htmlAttributes = $this->getHtmlAttributes();
         foreach ($dom->getElementsByTagName('iframe') as $item) {
@@ -76,7 +76,7 @@ class Processor
     /**
      * @return array
      */
-    protected function getHtmlAttributes()
+    protected function getHtmlAttributes(): array
     {
         return $this->params;
     }
