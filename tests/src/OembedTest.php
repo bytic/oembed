@@ -18,18 +18,20 @@ class OembedTest extends AbstractTest
     {
         CacheManager::clear('https://www.youtube.com/watch?v=Yq7Eh6JTKIg');
 
+//        $info = EmbedManager::create('https://www.youtube.com/watch?v=Yq7Eh6JTKIg');
+//        file_put_contents(TEST_FIXTURE_PATH . '/youtube.serialized', serialize($info));
+
         $adapter = unserialize(file_get_contents(TEST_FIXTURE_PATH . '/youtube.serialized'));
         $embedLibrary = m::mock(EmbedManager::class)->makePartial();
         $embedLibrary->shouldReceive('create')->once()->andReturn($adapter);
 
         Oembed::setEmbedLibrary($embedLibrary);
-        $data1 = Oembed::get('https://www.youtube.com/watch?v=Yq7Eh6JTKIg');
-        $data2 = Oembed::get('https://www.youtube.com/watch?v=Yq7Eh6JTKIg');
-        $data3 = Oembed::get('https://www.youtube.com/watch?v=Yq7Eh6JTKIg');
 
-        self::assertInstanceOf(EmbedAdapter::class, $data1);
-        self::assertInstanceOf(EmbedAdapter::class, $data2);
-        self::assertInstanceOf(EmbedAdapter::class, $data3);
+        foreach ([1, 2, 2] as $count) {
+            $abstract = Oembed::get('https://www.youtube.com/watch?v=Yq7Eh6JTKIg');
+            self::assertInstanceOf(EmbedAdapter::class, $abstract);
+            self::assertSame('video', $abstract->get('type'));
+        }
     }
 
     protected function tearDown(): void

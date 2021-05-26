@@ -72,8 +72,8 @@ class CacheManager
      */
     protected static function filename($url, array $options = null)
     {
-        $filename = preg_replace("/[^a-zA-Z]/", "", $url);
-        $filename .= '--' . sha1(serialize($options));
+        $filename = preg_replace("/[^a-zA-Z0-9]/", "", $url);
+        $filename .= '--' . sha1(serialize([$url, $options]));
         $filename .= '.serialized';
         return $filename;
     }
