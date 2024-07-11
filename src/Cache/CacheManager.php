@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace ByTIC\Oembed\Cache;
+
+use Nip\Cache\Cacheable\HasCacheStore;
 
 /**
  * Class CacheManager
@@ -8,17 +11,17 @@ namespace ByTIC\Oembed\Cache;
  */
 class CacheManager
 {
-    protected static $path = __DIR__ . '/../../cache';
+    use HasCacheStore;
 
-    /**
-     * @param string $url
-     * @param array|null $options
-     * @return bool
-     */
-    public static function has($url, array $options = null)
+    public function getOrSet($url, array $options = null, $callback)
     {
-        $filename = static::path(static::filename($url, $options));
-        return file_exists($filename);
+        $name = $this->name($url, $options);
+        if ($this->cacheStore()->has($name)) {
+            return $this->cacheStore()->get($name);
+        }
+        $data = $callback();
+        $this->cacheStore()->set($name, $data, 30*24*60*60);
+        return $data;
     }
 
     /**
@@ -26,43 +29,10 @@ class CacheManager
      * @param array|null $options
      * @return false|\Embed\OEmbed
      */
-    public static function get($url, array $options = null)
+    public function get($url, array $options = null)
     {
-        $filename = static::path(static::filename($url, $options));
-        return unserialize(file_get_contents($filename));
-    }
-
-    /**
-     * @param $data
-     * @param string $url
-     * @param array|null $options
-     * @return false|string
-     */
-    public static function set($data, $url, array $options = null)
-    {
-        $filename = static::path(static::filename($url, $options));
-        return file_put_contents($filename, serialize($data));
-    }
-
-    /**
-     * @param $url
-     * @param array|null $options
-     */
-    public static function clear($url, array $options = null)
-    {
-        $filename = static::path(static::filename($url, $options));
-        if (file_exists($filename)) {
-            unlink($filename);
-        }
-    }
-
-    /**
-     * @param null $filename
-     * @return string
-     */
-    protected static function path($filename = null)
-    {
-        return realpath(static::$path) . ($filename ? '/' . $filename : '');
+        $name = $this->name($url, $options);
+        return$this->cacheStore()->get($name);
     }
 
     /**
@@ -70,9 +40,10 @@ class CacheManager
      * @param array|null $options
      * @return string|string[]|null
      */
-    protected static function filename($url, array $options = null)
+    protected function name($url, array $options = null)
     {
-        $filename = preg_replace("/[^a-zA-Z0-9]/", "", $url);
+        $filename = 'oembed.';
+        $filename .= preg_replace("/[^a-zA-Z0-9]/", "", $url);
         $filename .= '--' . sha1(serialize([$url, $options]));
         $filename .= '.serialized';
         return $filename;
@@ -83,6 +54,6 @@ class CacheManager
      */
     public static function setPath(string $path)
     {
-        self::$path = $path;
+//        self::$path = $path;
     }
 }

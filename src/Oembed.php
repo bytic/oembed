@@ -3,6 +3,7 @@
 namespace ByTIC\Oembed;
 
 use ByTIC\Oembed\Cache\CacheManager;
+use Nip\Utility\Traits\SingletonTrait;
 
 /**
  * Class Oembed
@@ -10,8 +11,19 @@ use ByTIC\Oembed\Cache\CacheManager;
  */
 class Oembed
 {
-    protected static $cacheManager;
-    protected static $embedLibrary;
+    use SingletonTrait;
+
+    protected $cacheManager;
+    protected $embedLibrary;
+
+    /**
+     * @param $cacheManager
+     */
+    public function __construct($cacheManager = null)
+    {
+        $this->cacheManager = $cacheManager ?? new CacheManager();
+    }
+
 
     /**
      * @param $url
@@ -20,12 +32,14 @@ class Oembed
      */
     public static function get($url, array $options = [])
     {
-        if (!CacheManager::has($url, $options)) {
-            $data = self::fetch($url, $options);
-            CacheManager::set($data, $url, $options);
-            return $data;
-        }
-        return CacheManager::get($url, $options);
+        return self::instance()->doGet($url, $options);
+    }
+
+    protected function doGet($url, array $options = [])
+    {
+        return $this->cacheManager->getOrSet($url, $options, function () use ($options, $url) {
+            return $this->fetch($url, $options);
+        });
     }
 
     /**
@@ -33,20 +47,20 @@ class Oembed
      * @param array|null $options
      * @return \Embed\OEmbed
      */
-    protected static function fetch($url, array $options = [])
+    protected function fetch($url, array $options = [])
     {
-        return static::embedLibrary()::create($url, $options);
+        return $this->embedLibrary()::create($url, $options);
     }
 
     /**
      * @return EmbedManager
      */
-    protected static function embedLibrary()
+    protected function embedLibrary()
     {
-        if (static::$embedLibrary === null) {
-            static::$embedLibrary = new EmbedManager();
+        if ($this->embedLibrary === null) {
+            $this->embedLibrary = new EmbedManager();
         }
-        return static::$embedLibrary;
+        return $this->embedLibrary;
     }
 
     /**
@@ -54,6 +68,6 @@ class Oembed
      */
     public static function setEmbedLibrary($embedLibrary)
     {
-        self::$embedLibrary = $embedLibrary;
+        self::instance()->embedLibrary = $embedLibrary;
     }
 }
